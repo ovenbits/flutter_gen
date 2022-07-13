@@ -173,14 +173,6 @@ _Statement? _createAssetTypeStatement(
         isConstConstructor: integration.isConstConstructor,
         needDartDoc: true,
       );
-      //return _Statement(
-      //type: 'AssetGenImage',
-      //filePath: assetType.path,
-      //name: name,
-      //value: 'AssetGenImage(\'${posixStyle(assetType.path)}\')',
-      //isConstConstructor: true,
-      //needDartDoc: true,
-      //);
     }
   }
   return null;
