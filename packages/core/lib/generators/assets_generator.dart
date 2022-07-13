@@ -74,7 +74,7 @@ String generateAssets(
     throw 'The value of "flutter_gen/assets/style." is incorrect.';
   }
 
-  final imports = <String>{''};
+  final imports = <String>{};
   integrations.where((integration) => integration.isEnabled).forEach((integration) {
     imports.addAll(integration.requiredImports);
     classesBuffer.writeln(integration.classOutput);
@@ -140,16 +140,7 @@ _Statement? _createAssetTypeStatement(
   String name,
 ) {
   final childAssetAbsolutePath = join(rootPath, assetType.path);
-  if (assetType.isSupportedImage) {
-    return _Statement(
-      type: 'AssetGenImage',
-      filePath: assetType.path,
-      name: name,
-      value: 'AssetGenImage(\'${posixStyle(assetType.path)}\')',
-      isConstConstructor: true,
-      needDartDoc: true,
-    );
-  } else if (FileSystemEntity.isDirectorySync(childAssetAbsolutePath)) {
+  if (FileSystemEntity.isDirectorySync(childAssetAbsolutePath)) {
     final childClassName = '\$${assetType.path.camelCase().capitalize()}Gen';
     return _Statement(
       type: childClassName,
@@ -182,6 +173,14 @@ _Statement? _createAssetTypeStatement(
         isConstConstructor: integration.isConstConstructor,
         needDartDoc: true,
       );
+      //return _Statement(
+      //type: 'AssetGenImage',
+      //filePath: assetType.path,
+      //name: name,
+      //value: 'AssetGenImage(\'${posixStyle(assetType.path)}\')',
+      //isConstConstructor: true,
+      //needDartDoc: true,
+      //);
     }
   }
   return null;

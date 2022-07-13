@@ -74,7 +74,8 @@ FlutterGen _$FlutterGenFromJson(Map json) => $checkedCreate(
             'assets',
             'fonts',
             'integrations',
-            'colors'
+            'colors',
+            'exclude'
           ],
         );
         final val = FlutterGen(
@@ -88,6 +89,8 @@ FlutterGen _$FlutterGenFromJson(Map json) => $checkedCreate(
               'integrations', (v) => FlutterGenIntegrations.fromJson(v as Map)),
           colors: $checkedConvert(
               'colors', (v) => FlutterGenColors.fromJson(v as Map)),
+          exclude: $checkedConvert('exclude',
+              (v) => (v as List<dynamic>).map((e) => e as String).toList()),
         );
         return val;
       },
@@ -154,9 +157,15 @@ FlutterGenIntegrations _$FlutterGenIntegrationsFromJson(Map json) =>
       ($checkedConvert) {
         $checkKeys(
           json,
-          requiredKeys: const ['flutter_svg', 'flare_flutter', 'rive'],
+          requiredKeys: const [
+            'flutter_image',
+            'flutter_svg',
+            'flare_flutter',
+            'rive'
+          ],
         );
         final val = FlutterGenIntegrations(
+          flutterImage: $checkedConvert('flutter_image', (v) => v as bool),
           flutterSvg: $checkedConvert('flutter_svg', (v) => v as bool),
           flareFlutter: $checkedConvert('flare_flutter', (v) => v as bool),
           rive: $checkedConvert('rive', (v) => v as bool),
@@ -164,6 +173,7 @@ FlutterGenIntegrations _$FlutterGenIntegrationsFromJson(Map json) =>
         return val;
       },
       fieldKeyMap: const {
+        'flutterImage': 'flutter_image',
         'flutterSvg': 'flutter_svg',
         'flareFlutter': 'flare_flutter'
       },

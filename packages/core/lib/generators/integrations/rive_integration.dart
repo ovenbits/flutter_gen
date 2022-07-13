@@ -4,6 +4,7 @@ import 'integration.dart';
 class RiveIntegration extends Integration {
   @override
   List<String> get requiredImports => [
+        'package:flutter/widgets.dart',
         'package:rive/rive.dart',
       ];
 
