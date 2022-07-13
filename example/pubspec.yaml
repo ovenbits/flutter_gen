@@ -117,7 +117,7 @@ flutter_gen:
   line_length: 80   # Optional (default: 80)
 
   integrations:
-    flutter_image: false
+    flutter_image: true
     flutter_svg: true
     flare_flutter: true
     rive: true
