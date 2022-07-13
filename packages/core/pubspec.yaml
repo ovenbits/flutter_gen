@@ -1,3 +1,4 @@
+publish_to: none
 name: flutter_gen_core
 
 description: The Flutter code generator for your assets, fonts, colors, … — Get rid of all String-based APIs.
