@@ -58,6 +58,7 @@ class FlutterGen {
     required this.fonts,
     required this.integrations,
     required this.colors,
+    required this.exclude,
   });
 
   @JsonKey(name: 'output', required: true)
@@ -78,6 +79,9 @@ class FlutterGen {
   @JsonKey(name: 'colors', required: true)
   final FlutterGenColors colors;
 
+  @JsonKey(name: 'exclude', required: true)
+  final List<String> exclude;
+
   factory FlutterGen.fromJson(Map json) => _$FlutterGenFromJson(json);
 }
 
@@ -91,8 +95,7 @@ class FlutterGenColors {
   @JsonKey(name: 'inputs', required: true)
   final List<String> inputs;
 
-  factory FlutterGenColors.fromJson(Map json) =>
-      _$FlutterGenColorsFromJson(json);
+  factory FlutterGenColors.fromJson(Map json) => _$FlutterGenColorsFromJson(json);
 }
 
 @JsonSerializable()
@@ -106,9 +109,7 @@ class FlutterGenAssets {
     required this.packageParameterEnabled,
     required this.style,
   }) {
-    if (style != dotDelimiterStyle &&
-        style != snakeCaseStyle &&
-        style != camelCaseStyle) {
+    if (style != dotDelimiterStyle && style != snakeCaseStyle && style != camelCaseStyle) {
       throw ArgumentError.value(style, 'style');
     }
   }
@@ -128,8 +129,7 @@ class FlutterGenAssets {
 
   bool get isCamelCaseStyle => style == camelCaseStyle;
 
-  factory FlutterGenAssets.fromJson(Map json) =>
-      _$FlutterGenAssetsFromJson(json);
+  factory FlutterGenAssets.fromJson(Map json) => _$FlutterGenAssetsFromJson(json);
 }
 
 @JsonSerializable()
@@ -145,10 +145,14 @@ class FlutterGenFonts {
 @JsonSerializable()
 class FlutterGenIntegrations {
   FlutterGenIntegrations({
+    required this.flutterImage,
     required this.flutterSvg,
     required this.flareFlutter,
     required this.rive,
   });
+
+  @JsonKey(name: 'flutter_image', required: true)
+  final bool flutterImage;
 
   @JsonKey(name: 'flutter_svg', required: true)
   final bool flutterSvg;
@@ -159,6 +163,5 @@ class FlutterGenIntegrations {
   @JsonKey(name: 'rive', required: true)
   final bool rive;
 
-  factory FlutterGenIntegrations.fromJson(Map json) =>
-      _$FlutterGenIntegrationsFromJson(json);
+  factory FlutterGenIntegrations.fromJson(Map json) => _$FlutterGenIntegrationsFromJson(json);
 }

@@ -21,8 +21,7 @@ Future<Config> loadPubspecConfig(File pubspecFile) async {
     basename(pubspecFile.path),
   ))}');
   final content = await pubspecFile.readAsString().catchError((dynamic error) {
-    throw FileSystemException(
-        'Cannot open pubspec.yaml: ${pubspecFile.absolute}');
+    throw FileSystemException('Cannot open pubspec.yaml: ${pubspecFile.absolute}');
   });
   final userMap = loadYaml(content) as Map?;
   final defaultMap = loadYaml(_defaultConfig) as Map?;
@@ -39,6 +38,7 @@ flutter_gen:
   line_length: 80
 
   integrations:
+    flutter_image: false
     flutter_svg: false
     flare_flutter: false
     rive: false
@@ -54,6 +54,8 @@ flutter_gen:
   colors:
     enabled: true
     inputs: []
+
+  exclude: []
 
 flutter:
   assets: []

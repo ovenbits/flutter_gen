@@ -16,6 +16,7 @@ import 'integrations/flare_integration.dart';
 import 'integrations/integration.dart';
 import 'integrations/rive_integration.dart';
 import 'integrations/svg_integration.dart';
+import 'integrations/image_integration.dart';
 
 class AssetsGenConfig {
   AssetsGenConfig._(
@@ -23,6 +24,7 @@ class AssetsGenConfig {
     this._packageName,
     this.flutterGen,
     this.assets,
+    this.exclude,
   );
 
   factory AssetsGenConfig.fromConfig(File pubspecFile, Config config) {
@@ -31,6 +33,7 @@ class AssetsGenConfig {
       config.pubspec.packageName,
       config.pubspec.flutterGen,
       config.pubspec.flutter.assets,
+      config.pubspec.flutterGen.exclude,
     );
   }
 
@@ -38,9 +41,9 @@ class AssetsGenConfig {
   final String _packageName;
   final FlutterGen flutterGen;
   final List<String> assets;
+  final List<String> exclude;
 
-  String get packageParameterLiteral =>
-      flutterGen.assets.packageParameterEnabled ? _packageName : '';
+  String get packageParameterLiteral => flutterGen.assets.packageParameterEnabled ? _packageName : '';
 }
 
 String generateAssets(
@@ -48,16 +51,15 @@ String generateAssets(
   DartFormatter formatter,
 ) {
   if (config.assets.isEmpty) {
-    throw const InvalidSettingsException(
-        'The value of "flutter/assets:" is incorrect.');
+    throw const InvalidSettingsException('The value of "flutter/assets:" is incorrect.');
   }
 
   final importsBuffer = StringBuffer();
   final classesBuffer = StringBuffer();
 
   final integrations = <Integration>[
-    if (config.flutterGen.integrations.flutterSvg)
-      SvgIntegration(config.packageParameterLiteral),
+    if (config.flutterGen.integrations.flutterImage) ImageIntegration(config.packageParameterLiteral),
+    if (config.flutterGen.integrations.flutterSvg) SvgIntegration(config.packageParameterLiteral),
     if (config.flutterGen.integrations.flareFlutter) FlareIntegration(),
     if (config.flutterGen.integrations.rive) RiveIntegration(),
   ];
@@ -72,14 +74,8 @@ String generateAssets(
     throw 'The value of "flutter_gen/assets/style." is incorrect.';
   }
 
-  classesBuffer.writeln(_assetGenImageClassDefinition(
-    config.packageParameterLiteral,
-  ));
-
-  final imports = <String>{'package:flutter/widgets.dart'};
-  integrations
-      .where((integration) => integration.isEnabled)
-      .forEach((integration) {
+  final imports = <String>{''};
+  integrations.where((integration) => integration.isEnabled).forEach((integration) {
     imports.addAll(integration.requiredImports);
     classesBuffer.writeln(integration.classOutput);
   });
@@ -99,16 +95,14 @@ String generateAssets(
 List<String> _getAssetRelativePathList(
   String rootPath,
   List<String> assets,
+  List<String> excludes,
 ) {
   final assetRelativePathList = <String>[];
   for (final assetName in assets) {
     final assetAbsolutePath = join(rootPath, assetName);
+    if (excludes.any((exclude) => assetAbsolutePath.contains(exclude))) continue;
     if (FileSystemEntity.isDirectorySync(assetAbsolutePath)) {
-      assetRelativePathList.addAll(Directory(assetAbsolutePath)
-          .listSync()
-          .whereType<File>()
-          .map((e) => relative(e.path, from: rootPath))
-          .toList());
+      assetRelativePathList.addAll(Directory(assetAbsolutePath).listSync().whereType<File>().where((file) => !excludes.any((exclude) => file.path.contains(exclude))).map((e) => relative(e.path, from: rootPath)).toList());
     } else if (FileSystemEntity.isFileSync(assetAbsolutePath)) {
       assetRelativePathList.add(relative(assetAbsolutePath, from: rootPath));
     }
@@ -199,12 +193,10 @@ String _dotDelimiterStyleDefinition(
   List<Integration> integrations,
 ) {
   final buffer = StringBuffer();
-  final assetRelativePathList =
-      _getAssetRelativePathList(config.rootPath, config.assets);
+  final assetRelativePathList = _getAssetRelativePathList(config.rootPath, config.assets, config.exclude);
   final assetsStaticStatements = <_Statement>[];
 
-  final assetTypeQueue = ListQueue<AssetType>.from(
-      _constructAssetTree(assetRelativePathList).children);
+  final assetTypeQueue = ListQueue<AssetType>.from(_constructAssetTree(assetRelativePathList).children);
 
   while (assetTypeQueue.isNotEmpty) {
     final assetType = assetTypeQueue.removeFirst();
@@ -218,10 +210,7 @@ String _dotDelimiterStyleDefinition(
               config.rootPath,
               e.assetType,
               integrations,
-              (e.isUniqueWithoutExtension
-                      ? basenameWithoutExtension(e.assetType.path)
-                      : basename(e.assetType.path))
-                  .camelCase(),
+              (e.isUniqueWithoutExtension ? basenameWithoutExtension(e.assetType.path) : basename(e.assetType.path)).camelCase(),
             ),
           )
           .whereType<_Statement>()
@@ -249,8 +238,7 @@ String _dotDelimiterStyleDefinition(
       assetTypeQueue.addAll(assetType.children);
     }
   }
-  buffer
-      .writeln(_dotDelimiterStyleAssetsClassDefinition(assetsStaticStatements));
+  buffer.writeln(_dotDelimiterStyleAssetsClassDefinition(assetsStaticStatements));
   return buffer.toString();
 }
 
@@ -262,11 +250,7 @@ String _camelCaseStyleDefinition(
   return _flatStyleDefinition(
     config,
     integrations,
-    (e) => (e.isUniqueWithoutExtension
-            ? withoutExtension(e.assetType.path)
-            : e.assetType.path)
-        .replaceFirst(RegExp(r'asset(s)?'), '')
-        .camelCase(),
+    (e) => (e.isUniqueWithoutExtension ? withoutExtension(e.assetType.path) : e.assetType.path).replaceFirst(RegExp(r'asset(s)?'), '').camelCase(),
   );
 }
 
@@ -278,11 +262,7 @@ String _snakeCaseStyleDefinition(
   return _flatStyleDefinition(
     config,
     integrations,
-    (e) => (e.isUniqueWithoutExtension
-            ? withoutExtension(e.assetType.path)
-            : e.assetType.path)
-        .replaceFirst(RegExp(r'asset(s)?'), '')
-        .snakeCase(),
+    (e) => (e.isUniqueWithoutExtension ? withoutExtension(e.assetType.path) : e.assetType.path).replaceFirst(RegExp(r'asset(s)?'), '').snakeCase(),
   );
 }
 
@@ -291,7 +271,7 @@ String _flatStyleDefinition(
   List<Integration> integrations,
   String Function(AssetTypeIsUniqueWithoutExtension) createName,
 ) {
-  final statements = _getAssetRelativePathList(config.rootPath, config.assets)
+  final statements = _getAssetRelativePathList(config.rootPath, config.assets, config.exclude)
       .distinct()
       .sorted()
       .map((relativePath) => AssetType(relativePath))
@@ -310,16 +290,14 @@ String _flatStyleDefinition(
 }
 
 String _flatStyleAssetsClassDefinition(List<_Statement> statements) {
-  final statementsBlock =
-      statements.map((statement) => '''${statement.toDartDocString()}
+  final statementsBlock = statements.map((statement) => '''${statement.toDartDocString()}
            ${statement.toStaticFieldString()}
            ''').join('\n');
   return _assetsClassDefinition(statementsBlock);
 }
 
 String _dotDelimiterStyleAssetsClassDefinition(List<_Statement> statements) {
-  final statementsBlock =
-      statements.map((statement) => statement.toStaticFieldString()).join('\n');
+  final statementsBlock = statements.map((statement) => statement.toStaticFieldString()).join('\n');
   return _assetsClassDefinition(statementsBlock);
 }
 
@@ -353,80 +331,6 @@ class $className {
 ''';
 }
 
-String _assetGenImageClassDefinition(String packageName) {
-  final packageParameter = packageName.isNotEmpty ? " = '$packageName'" : '';
-
-  final keyName = packageName.isEmpty
-      ? '_assetName'
-      : "'packages/$packageName/\$_assetName'";
-
-  return '''
-
-class AssetGenImage {
-  const AssetGenImage(this._assetName);
-
-  final String _assetName;
-
-  Image image({
-    Key? key,
-    AssetBundle? bundle,
-    ImageFrameBuilder? frameBuilder,
-    ImageErrorWidgetBuilder? errorBuilder,
-    String? semanticLabel,
-    bool excludeFromSemantics = false,
-    double? scale,
-    double? width,
-    double? height,
-    Color? color,
-    Animation<double>? opacity,
-    BlendMode? colorBlendMode,
-    BoxFit? fit,
-    AlignmentGeometry alignment = Alignment.center,
-    ImageRepeat repeat = ImageRepeat.noRepeat,
-    Rect? centerSlice,
-    bool matchTextDirection = false,
-    bool gaplessPlayback = false,
-    bool isAntiAlias = false,
-    String? package$packageParameter,
-    FilterQuality filterQuality = FilterQuality.low,
-    int? cacheWidth,
-    int? cacheHeight,
-  }) {
-    return Image.asset(
-      _assetName,
-      key: key,
-      bundle: bundle,
-      frameBuilder: frameBuilder,
-      errorBuilder: errorBuilder,
-      semanticLabel: semanticLabel,
-      excludeFromSemantics: excludeFromSemantics,
-      scale: scale,
-      width: width,
-      height: height,
-      color: color,
-      opacity: opacity,
-      colorBlendMode: colorBlendMode,
-      fit: fit,
-      alignment: alignment,
-      repeat: repeat,
-      centerSlice: centerSlice,
-      matchTextDirection: matchTextDirection,
-      gaplessPlayback: gaplessPlayback,
-      isAntiAlias: isAntiAlias,
-      package: package,
-      filterQuality: filterQuality,
-      cacheWidth: cacheWidth,
-      cacheHeight: cacheHeight,
-    );
-  }
-
-  String get path => _assetName;
-
-  String get keyName => $keyName;
-}
-''';
-}
-
 class _Statement {
   const _Statement({
     required this.type,
@@ -446,8 +350,7 @@ class _Statement {
 
   String toDartDocString() => '/// File path: ${posixStyle(filePath)}';
 
-  String toGetterString() =>
-      '$type get $name => ${isConstConstructor ? 'const' : ''} $value;';
+  String toGetterString() => '$type get $name => ${isConstConstructor ? 'const' : ''} $value;';
 
   String toStaticFieldString() => 'static const $type $name = $value;';
 }
