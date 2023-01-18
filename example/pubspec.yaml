@@ -41,7 +41,7 @@ dependencies:
   local_auth: 2.0.1
   flutter_hooks: 0.18.3
   hooks_riverpod: 1.0.3
-  async: 2.8.2
+  async: ^2.8.2
   dio: 4.0.6
   connectivity_plus: 2.3.0
   ua_client_hints: 1.1.0
