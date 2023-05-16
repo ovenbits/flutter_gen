@@ -160,7 +160,7 @@ class FlutterGenIntegrations {
     required this.lottie,
   });
 
-  @JsonKey(name: 'flutter_image', required: true)
+  @JsonKey(name: 'flutter_image', required: false, defaultValue: true)
   final bool flutterImage;
 
   @JsonKey(name: 'flutter_svg', required: true)

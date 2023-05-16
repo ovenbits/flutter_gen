@@ -163,7 +163,6 @@ FlutterGenIntegrations _$FlutterGenIntegrationsFromJson(Map json) =>
         $checkKeys(
           json,
           requiredKeys: const [
-            'flutter_image',
             'flutter_svg',
             'flare_flutter',
             'rive',
@@ -171,7 +170,8 @@ FlutterGenIntegrations _$FlutterGenIntegrationsFromJson(Map json) =>
           ],
         );
         final val = FlutterGenIntegrations(
-          flutterImage: $checkedConvert('flutter_image', (v) => v as bool),
+          flutterImage:
+              $checkedConvert('flutter_image', (v) => v as bool? ?? true),
           flutterSvg: $checkedConvert('flutter_svg', (v) => v as bool),
           flareFlutter: $checkedConvert('flare_flutter', (v) => v as bool),
           rive: $checkedConvert('rive', (v) => v as bool),
