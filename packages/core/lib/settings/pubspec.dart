@@ -153,11 +153,15 @@ class FlutterGenFonts {
 @JsonSerializable()
 class FlutterGenIntegrations {
   FlutterGenIntegrations({
+    required this.flutterImage,
     required this.flutterSvg,
     required this.flareFlutter,
     required this.rive,
     required this.lottie,
   });
+
+  @JsonKey(name: 'flutter_image', required: true)
+  final bool flutterImage;
 
   @JsonKey(name: 'flutter_svg', required: true)
   final bool flutterSvg;

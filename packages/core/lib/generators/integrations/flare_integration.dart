@@ -11,6 +11,7 @@ class FlareIntegration extends Integration {
 
   @override
   List<String> get requiredImports => [
+        'package:flutter/widgets.dart',
         'package:flare_flutter/flare_actor.dart',
         'package:flare_flutter/flare_controller.dart',
       ];
