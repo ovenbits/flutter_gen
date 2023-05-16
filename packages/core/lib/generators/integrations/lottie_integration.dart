@@ -27,6 +27,7 @@ class LottieIntegration extends Integration {
 
   @override
   List<String> get requiredImports => [
+        'package:flutter/widgets.dart',
         'package:lottie/lottie.dart',
       ];
 
