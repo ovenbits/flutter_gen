@@ -245,17 +245,18 @@ _Statement? _createAssetTypeStatement(
   String name,
 ) {
   final childAssetAbsolutePath = join(config.rootPath, assetType.path);
-  if (assetType.isSupportedImage) {
-    return _Statement(
-      type: 'AssetGenImage',
-      filePath: assetType.path,
-      name: name,
-      value: 'AssetGenImage(\'${posixStyle(assetType.path)}\')',
-      isConstConstructor: true,
-      isDirectory: false,
-      needDartDoc: true,
-    );
-  } else if (FileSystemEntity.isDirectorySync(childAssetAbsolutePath)) {
+  //if (assetType.isSupportedImage) {
+  //  return _Statement(
+  //    type: 'AssetGenImage',
+  //    filePath: assetType.path,
+  //    name: name,
+  //    value: 'AssetGenImage(\'${posixStyle(assetType.path)}\')',
+  //    isConstConstructor: true,
+  //    isDirectory: false,
+  //    needDartDoc: true,
+  //  );
+  //} else
+  if (FileSystemEntity.isDirectorySync(childAssetAbsolutePath)) {
     final childClassName = '\$${assetType.path.camelCase().capitalize()}Gen';
     return _Statement(
       type: childClassName,
