@@ -28,7 +28,7 @@ void main() {
 
       expect(() {
         return generateFonts(formatter, config.pubspec.flutter.fonts,
-            config.pubspec.flutterGen.fonts);
+            FontsGenConfig.fromConfig(config));
       }, throwsA(isA<InvalidSettingsException>()));
     });
 

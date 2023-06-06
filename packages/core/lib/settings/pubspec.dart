@@ -145,7 +145,7 @@ class FlutterGenFonts {
   final bool enabled;
 
   @JsonKey(name: 'outputs', required: true)
-  final FlutterGenElementOutputs outputs;
+  final FlutterGenElementFontsOutputs outputs;
 
   factory FlutterGenFonts.fromJson(Map json) => _$FlutterGenFontsFromJson(json);
 }
@@ -190,6 +190,20 @@ class FlutterGenElementOutputs {
 
   factory FlutterGenElementOutputs.fromJson(Map json) =>
       _$FlutterGenElementOutputsFromJson(json);
+}
+
+@JsonSerializable()
+class FlutterGenElementFontsOutputs extends FlutterGenElementOutputs {
+  FlutterGenElementFontsOutputs({
+    required super.className,
+    required this.packageParameterEnabled,
+  });
+
+  @JsonKey(name: 'package_parameter_enabled', required: false)
+  final bool? packageParameterEnabled;
+
+  factory FlutterGenElementFontsOutputs.fromJson(Map json) =>
+      _$FlutterGenElementFontsOutputsFromJson(json);
 }
 
 @JsonSerializable()
