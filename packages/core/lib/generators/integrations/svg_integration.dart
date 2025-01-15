@@ -1,32 +1,50 @@
+import 'dart:io';
+
 import 'package:flutter_gen_core/generators/integrations/integration.dart';
-import 'package:flutter_gen_core/settings/asset_type.dart';
+import 'package:vector_graphics_compiler/vector_graphics_compiler.dart';
 
 class SvgIntegration extends Integration {
-  SvgIntegration(String packageParameterLiteral)
-      : super(packageParameterLiteral);
+  SvgIntegration(String packageName, {super.parseMetadata})
+      : super(packageName);
 
-  String get packageExpression => packageParameterLiteral.isNotEmpty
-      ? ' = \'$packageParameterLiteral\''
-      : '';
+  String get packageExpression => isPackage ? ' = package' : '';
 
   @override
-  List<String> get requiredImports => [
-        'package:flutter_svg/flutter_svg.dart',
-        'package:flutter/services.dart',
+  List<Import> get requiredImports => [
+        Import('package:flutter/widgets.dart'),
+        Import('package:flutter/services.dart'),
+        Import('package:flutter_svg/flutter_svg.dart', alias: '_svg'),
+        Import('package:vector_graphics/vector_graphics.dart', alias: '_vg'),
       ];
 
   @override
   String get classOutput => _classDefinition;
 
   String get _classDefinition => '''class SvgGenImage {
-  const SvgGenImage(this._assetName);
+  const SvgGenImage(
+    this._assetName, {
+    this.size,
+    this.flavors = const {},
+  }) : _isVecFormat = false;
+  
+  const SvgGenImage.vec(
+    this._assetName, {
+    this.size,
+    this.flavors = const {},
+  }) : _isVecFormat = true;
 
   final String _assetName;
+  final Size? size;
+  final Set<String> flavors;
+  final bool _isVecFormat;
 
-  SvgPicture svg({
+${isPackage ? "\n  static const String package = '$packageName';" : ''}
+
+  _svg.SvgPicture svg({
     Key? key,
     bool matchTextDirection = false,
     AssetBundle? bundle,
+    ${isPackage ? deprecationMessagePackage : ''}
     String? package$packageExpression,
     double? width,
     double? height,
@@ -36,19 +54,32 @@ class SvgIntegration extends Integration {
     WidgetBuilder? placeholderBuilder,
     String? semanticsLabel,
     bool excludeFromSemantics = false,
-    SvgTheme theme = const SvgTheme(),
+    _svg.SvgTheme? theme,
     ColorFilter? colorFilter,
     Clip clipBehavior = Clip.hardEdge,
     @deprecated Color? color,
     @deprecated BlendMode colorBlendMode = BlendMode.srcIn,
     @deprecated bool cacheColorFilter = false,
   }) {
-    return SvgPicture.asset(
-      _assetName,
+    final _svg.BytesLoader loader;
+    if (_isVecFormat) {
+      loader = _vg.AssetBytesLoader(
+        _assetName,
+        assetBundle: bundle,
+        packageName: package,
+      );
+    } else {
+      loader = _svg.SvgAssetLoader(
+        _assetName,
+        assetBundle: bundle,
+        packageName: package,
+        theme: theme,
+      );
+    }
+    return _svg.SvgPicture(
+      loader,
       key: key,
       matchTextDirection: matchTextDirection,
-      bundle: bundle,
-      package: package,
       width: width,
       height: height,
       fit: fit,
@@ -57,10 +88,7 @@ class SvgIntegration extends Integration {
       placeholderBuilder: placeholderBuilder,
       semanticsLabel: semanticsLabel,
       excludeFromSemantics: excludeFromSemantics,
-      theme: theme,
-      colorFilter: colorFilter,
-      color: color,
-      colorBlendMode: colorBlendMode,
+      colorFilter: colorFilter ?? (color == null ? null : ColorFilter.mode(color, colorBlendMode)),
       clipBehavior: clipBehavior,
       cacheColorFilter: cacheColorFilter,
     );
@@ -68,17 +96,55 @@ class SvgIntegration extends Integration {
 
   String get path => _assetName;
 
-  String get keyName => ${packageParameterLiteral.isEmpty ? '_assetName' : '\'packages/$packageParameterLiteral/\$_assetName\''};
+  String get keyName => ${isPackage ? '\'packages/$packageName/\$_assetName\'' : '_assetName'};
 }''';
 
   @override
   String get className => 'SvgGenImage';
 
   @override
-  String classInstantiate(String path) => 'SvgGenImage(\'$path\')';
+  String classInstantiate(AssetType asset) {
+    // Query extra information about the SVG.
+    final info = parseMetadata ? _getMetadata(asset) : null;
+    final buffer = StringBuffer(className);
+    if (asset.extension == '.vec') {
+      buffer.write('.vec');
+    }
+    buffer.write('(');
+    buffer.write('\'${asset.posixStylePath}\'');
+    if (info != null) {
+      buffer.write(', size: Size(${info.width}, ${info.height})');
+    }
+    if (asset.flavors.isNotEmpty) {
+      buffer.write(', flavors: {');
+      final flavors = asset.flavors.map((e) => '\'$e\'').join(', ');
+      buffer.write(flavors);
+      buffer.write('}');
+      buffer.write(','); // Better formatting.
+    }
+    buffer.write(')');
+    return buffer.toString();
+  }
+
+  ImageMetadata? _getMetadata(AssetType asset) {
+    try {
+      // The SVG file is read fully, then parsed with the vector_graphics
+      // library. This is quite a heavy way to extract just the dimensions,
+      // but it's also the same way it will be eventually rendered by Flutter.
+      final svg = File(asset.fullPath).readAsStringSync();
+      final vec = parseWithoutOptimizers(svg);
+      return ImageMetadata(vec.width, vec.height);
+    } catch (e) {
+      stderr.writeln(
+        '[WARNING] Failed to parse SVG \'${asset.path}\' metadata: $e',
+      );
+      return null;
+    }
+  }
 
   @override
-  bool isSupport(AssetType type) => type.mime == 'image/svg+xml';
+  bool isSupport(AssetType asset) =>
+      asset.mime == 'image/svg+xml' || asset.extension == '.vec';
 
   @override
   bool get isConstConstructor => true;

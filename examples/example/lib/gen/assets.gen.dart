@@ -7,22 +7,21 @@
 // ignore_for_file: type=lint
 // ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
 
-import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
-import 'package:flare_flutter/flare_actor.dart';
-import 'package:flare_flutter/flare_controller.dart';
-import 'package:rive/rive.dart';
-import 'package:lottie/lottie.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart' as _svg;
+import 'package:lottie/lottie.dart' as _lottie;
+import 'package:rive/rive.dart' as _rive;
+import 'package:vector_graphics/vector_graphics.dart' as _vg;
 
 class $AssetsFlareGen {
   const $AssetsFlareGen();
 
   /// File path: assets/flare/Penguin.flr
-  FlareGenImage get penguin => const FlareGenImage('assets/flare/Penguin.flr');
+  String get penguin => 'assets/flare/Penguin.flr';
 
   /// List of all assets
-  List<FlareGenImage> get values => [penguin];
+  List<String> get values => [penguin];
 }
 
 class $AssetsImagesGen {
@@ -34,7 +33,13 @@ class $AssetsImagesGen {
   /// File path: assets/images/chip2.jpg
   AssetGenImage get chip2 => const AssetGenImage('assets/images/chip2.jpg');
 
+  /// Directory path: assets/images/chip3
+  $AssetsImagesChip3Gen get chip3 => const $AssetsImagesChip3Gen();
+
+  /// Directory path: assets/images/chip4
   $AssetsImagesChip4Gen get chip4 => const $AssetsImagesChip4Gen();
+
+  /// Directory path: assets/images/icons
   $AssetsImagesIconsGen get icons => const $AssetsImagesIconsGen();
 
   /// File path: assets/images/logo.png
@@ -69,6 +74,10 @@ class $AssetsJsonGen {
 class $AssetsLottieGen {
   const $AssetsLottieGen();
 
+  /// File path: assets/lottie/XuiIZ9X1Rf.lottie
+  LottieGenImage get xuiIZ9X1Rf =>
+      const LottieGenImage('assets/lottie/XuiIZ9X1Rf.lottie');
+
   /// File path: assets/lottie/alarm-clock-lottie-v440.json
   LottieGenImage get alarmClockLottieV440 =>
       const LottieGenImage('assets/lottie/alarm-clock-lottie-v440.json');
@@ -81,11 +90,21 @@ class $AssetsLottieGen {
   LottieGenImage get hamburgerArrow =>
       const LottieGenImage('assets/lottie/hamburger_arrow.json');
 
+  /// File path: assets/lottie/spinning_carrousel.zip
+  LottieGenImage get spinningCarrousel =>
+      const LottieGenImage('assets/lottie/spinning_carrousel.zip');
+
+  /// Directory path: assets/lottie/wrong
   $AssetsLottieWrongGen get wrong => const $AssetsLottieWrongGen();
 
   /// List of all assets
-  List<LottieGenImage> get values =>
-      [alarmClockLottieV440, geometricalAnimation, hamburgerArrow];
+  List<LottieGenImage> get values => [
+    xuiIZ9X1Rf,
+    alarmClockLottieV440,
+    geometricalAnimation,
+    hamburgerArrow,
+    spinningCarrousel,
+  ];
 }
 
 class $AssetsMixGen {
@@ -137,12 +156,25 @@ class $AssetsUnknownGen {
   List<String> get values => [changelog, readme, unknownMimeType];
 }
 
+class $AssetsImagesChip3Gen {
+  const $AssetsImagesChip3Gen();
+
+  /// File path: assets/images/chip3/chip3.jpg
+  AssetGenImage get chip3 =>
+      const AssetGenImage('assets/images/chip3/chip3.jpg');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [chip3];
+}
+
 class $AssetsImagesChip4Gen {
   const $AssetsImagesChip4Gen();
 
   /// File path: assets/images/chip4/chip4.jpg
-  AssetGenImage get chip4 =>
-      const AssetGenImage('assets/images/chip4/chip4.jpg');
+  AssetGenImage get chip4 => const AssetGenImage(
+        'assets/images/chip4/chip4.jpg',
+        flavors: {'extern'},
+      );
 
   /// List of all assets
   List<AssetGenImage> get values => [chip4];
@@ -172,16 +204,20 @@ class $AssetsImagesIconsGen {
 class $AssetsLottieWrongGen {
   const $AssetsLottieWrongGen();
 
+  /// File path: assets/lottie/wrong/dummy.zip
+  String get dummy => 'assets/lottie/wrong/dummy.zip';
+
   /// File path: assets/lottie/wrong/rocket-lottie-v439.json
   String get rocketLottieV439 => 'assets/lottie/wrong/rocket-lottie-v439.json';
 
   /// List of all assets
-  List<String> get values => [rocketLottieV439];
+  List<String> get values => [dummy, rocketLottieV439];
 }
 
 class MyAssets {
   MyAssets._();
 
+  static const String readme = 'README.md';
   static const $AssetsFlareGen flare = $AssetsFlareGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const $AssetsJsonGen json = $AssetsJsonGen();
@@ -190,12 +226,22 @@ class MyAssets {
   static const $AssetsMovieGen movie = $AssetsMovieGen();
   static const $AssetsRiveGen rive = $AssetsRiveGen();
   static const $AssetsUnknownGen unknown = $AssetsUnknownGen();
+
+  /// List of all assets
+  static List<String> get values => [readme];
 }
 
 class AssetGenImage {
-  const AssetGenImage(this._assetName);
+  const AssetGenImage(
+    this._assetName, {
+    this.size,
+    this.flavors = const {},
+  });
 
   final String _assetName;
+
+  final Size? size;
+  final Set<String> flavors;
 
   Image image({
     Key? key,
@@ -215,10 +261,10 @@ class AssetGenImage {
     ImageRepeat repeat = ImageRepeat.noRepeat,
     Rect? centerSlice,
     bool matchTextDirection = false,
-    bool gaplessPlayback = false,
+    bool gaplessPlayback = true,
     bool isAntiAlias = false,
     String? package,
-    FilterQuality filterQuality = FilterQuality.low,
+    FilterQuality filterQuality = FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
   }) {
@@ -267,11 +313,24 @@ class AssetGenImage {
 }
 
 class SvgGenImage {
-  const SvgGenImage(this._assetName);
+  const SvgGenImage(
+    this._assetName, {
+    this.size,
+    this.flavors = const {},
+  }) : _isVecFormat = false;
+
+  const SvgGenImage.vec(
+    this._assetName, {
+    this.size,
+    this.flavors = const {},
+  }) : _isVecFormat = true;
 
   final String _assetName;
+  final Size? size;
+  final Set<String> flavors;
+  final bool _isVecFormat;
 
-  SvgPicture svg({
+  _svg.SvgPicture svg({
     Key? key,
     bool matchTextDirection = false,
     AssetBundle? bundle,
@@ -284,19 +343,32 @@ class SvgGenImage {
     WidgetBuilder? placeholderBuilder,
     String? semanticsLabel,
     bool excludeFromSemantics = false,
-    SvgTheme theme = const SvgTheme(),
+    _svg.SvgTheme? theme,
     ColorFilter? colorFilter,
     Clip clipBehavior = Clip.hardEdge,
     @deprecated Color? color,
     @deprecated BlendMode colorBlendMode = BlendMode.srcIn,
     @deprecated bool cacheColorFilter = false,
   }) {
-    return SvgPicture.asset(
-      _assetName,
+    final _svg.BytesLoader loader;
+    if (_isVecFormat) {
+      loader = _vg.AssetBytesLoader(
+        _assetName,
+        assetBundle: bundle,
+        packageName: package,
+      );
+    } else {
+      loader = _svg.SvgAssetLoader(
+        _assetName,
+        assetBundle: bundle,
+        packageName: package,
+        theme: theme,
+      );
+    }
+    return _svg.SvgPicture(
+      loader,
       key: key,
       matchTextDirection: matchTextDirection,
-      bundle: bundle,
-      package: package,
       width: width,
       height: height,
       fit: fit,
@@ -305,10 +377,8 @@ class SvgGenImage {
       placeholderBuilder: placeholderBuilder,
       semanticsLabel: semanticsLabel,
       excludeFromSemantics: excludeFromSemantics,
-      theme: theme,
-      colorFilter: colorFilter,
-      color: color,
-      colorBlendMode: colorBlendMode,
+      colorFilter: colorFilter ??
+          (color == null ? null : ColorFilter.mode(color, colorBlendMode)),
       clipBehavior: clipBehavior,
       cacheColorFilter: cacheColorFilter,
     );
@@ -319,55 +389,16 @@ class SvgGenImage {
   String get keyName => _assetName;
 }
 
-class FlareGenImage {
-  const FlareGenImage(this._assetName);
-
-  final String _assetName;
-
-  FlareActor flare({
-    String? boundsNode,
-    String? animation,
-    BoxFit fit = BoxFit.contain,
-    Alignment alignment = Alignment.center,
-    bool isPaused = false,
-    bool snapToEnd = false,
-    FlareController? controller,
-    FlareCompletedCallback? callback,
-    Color? color,
-    bool shouldClip = true,
-    bool sizeFromArtboard = false,
-    String? artboard,
-    bool antialias = true,
-  }) {
-    return FlareActor(
-      _assetName,
-      boundsNode: boundsNode,
-      animation: animation,
-      fit: fit,
-      alignment: alignment,
-      isPaused: isPaused,
-      snapToEnd: snapToEnd,
-      controller: controller,
-      callback: callback,
-      color: color,
-      shouldClip: shouldClip,
-      sizeFromArtboard: sizeFromArtboard,
-      artboard: artboard,
-      antialias: antialias,
-    );
-  }
-
-  String get path => _assetName;
-
-  String get keyName => _assetName;
-}
-
 class RiveGenImage {
-  const RiveGenImage(this._assetName);
+  const RiveGenImage(
+    this._assetName, {
+    this.flavors = const {},
+  });
 
   final String _assetName;
+  final Set<String> flavors;
 
-  RiveAnimation rive({
+  _rive.RiveAnimation rive({
     String? artboard,
     List<String> animations = const [],
     List<String> stateMachines = const [],
@@ -375,10 +406,11 @@ class RiveGenImage {
     Alignment? alignment,
     Widget? placeHolder,
     bool antialiasing = true,
-    List<RiveAnimationController> controllers = const [],
-    OnInitCallback? onInit,
+    bool useArtboardSize = false,
+    List<_rive.RiveAnimationController> controllers = const [],
+    _rive.OnInitCallback? onInit,
   }) {
-    return RiveAnimation.asset(
+    return _rive.RiveAnimation.asset(
       _assetName,
       artboard: artboard,
       animations: animations,
@@ -387,6 +419,7 @@ class RiveGenImage {
       alignment: alignment,
       placeHolder: placeHolder,
       antialiasing: antialiasing,
+      useArtboardSize: useArtboardSize,
       controllers: controllers,
       onInit: onInit,
     );
@@ -398,23 +431,31 @@ class RiveGenImage {
 }
 
 class LottieGenImage {
-  const LottieGenImage(this._assetName);
+  const LottieGenImage(
+    this._assetName, {
+    this.flavors = const {},
+  });
 
   final String _assetName;
+  final Set<String> flavors;
 
-  LottieBuilder lottie({
+  _lottie.LottieBuilder lottie({
     Animation<double>? controller,
     bool? animate,
-    FrameRate? frameRate,
+    _lottie.FrameRate? frameRate,
     bool? repeat,
     bool? reverse,
-    LottieDelegates? delegates,
-    LottieOptions? options,
-    void Function(LottieComposition)? onLoaded,
-    LottieImageProviderFactory? imageProviderFactory,
+    _lottie.LottieDelegates? delegates,
+    _lottie.LottieOptions? options,
+    void Function(_lottie.LottieComposition)? onLoaded,
+    _lottie.LottieImageProviderFactory? imageProviderFactory,
     Key? key,
     AssetBundle? bundle,
-    Widget Function(BuildContext, Widget, LottieComposition?)? frameBuilder,
+    Widget Function(
+      BuildContext,
+      Widget,
+      _lottie.LottieComposition?,
+    )? frameBuilder,
     ImageErrorWidgetBuilder? errorBuilder,
     double? width,
     double? height,
@@ -425,7 +466,7 @@ class LottieGenImage {
     FilterQuality? filterQuality,
     void Function(String)? onWarning,
   }) {
-    return Lottie.asset(
+    return _lottie.Lottie.asset(
       _assetName,
       controller: controller,
       animate: animate,

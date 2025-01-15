@@ -8,7 +8,7 @@
 // ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
 
 import 'package:flutter/widgets.dart';
-import 'package:rive/rive.dart';
+import 'package:rive/rive.dart' as _rive;
 
 class $AssetsRiveGen {
   const $AssetsRiveGen();
@@ -27,11 +27,15 @@ class Assets {
 }
 
 class RiveGenImage {
-  const RiveGenImage(this._assetName);
+  const RiveGenImage(
+    this._assetName, {
+    this.flavors = const {},
+  });
 
   final String _assetName;
+  final Set<String> flavors;
 
-  RiveAnimation rive({
+  _rive.RiveAnimation rive({
     String? artboard,
     List<String> animations = const [],
     List<String> stateMachines = const [],
@@ -39,10 +43,11 @@ class RiveGenImage {
     Alignment? alignment,
     Widget? placeHolder,
     bool antialiasing = true,
-    List<RiveAnimationController> controllers = const [],
-    OnInitCallback? onInit,
+    bool useArtboardSize = false,
+    List<_rive.RiveAnimationController> controllers = const [],
+    _rive.OnInitCallback? onInit,
   }) {
-    return RiveAnimation.asset(
+    return _rive.RiveAnimation.asset(
       _assetName,
       artboard: artboard,
       animations: animations,
@@ -51,6 +56,7 @@ class RiveGenImage {
       alignment: alignment,
       placeHolder: placeHolder,
       antialiasing: antialiasing,
+      useArtboardSize: useArtboardSize,
       controllers: controllers,
       onInit: onInit,
     );

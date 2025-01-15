@@ -1,3 +1,69 @@
+## 5.8.0
+
+**Feature**
+- [#555](https://github.com/FlutterGen/flutter_gen/pull/555) Support build.yaml to configure. by [@b2nkuu](https://github.com/b2nkuu)
+- [#567](https://github.com/FlutterGen/flutter_gen/pull/567) Generate the `package` constant for generated font classes. by [@TesteurManiak](https://github.com/TesteurManiak)
+- [#569](https://github.com/FlutterGen/flutter_gen/pull/569) Enables `gaplessPlayback` by default for image assets. by [@AlexV525](https://github.com/AlexV525)
+- [#580](https://github.com/FlutterGen/flutter_gen/pull/580) Allows `mime: '>=1.0.0 <3.0.0'`. by [@AlexV525](https://github.com/AlexV525)
+
+**Development**
+- [#563](https://github.com/FlutterGen/flutter_gen/pull/563) Fix concurrency execution with melos. by [@wasabeef](https://github.com/wasabeef)
+
+## 5.7.0
+
+**Feature**
+- [#548](https://github.com/FlutterGen/flutter_gen/pull/548) Add Import abstraction for package imports alias. by [@AlexV525](https://github.com/AlexV525)
+
+**Development**
+- New releases [asdf-fluttergen](https://github.com/FlutterGen/asdf-fluttergen) and [setup-fluttergen](https://github.com/FlutterGen/setup-fluttergen). by [@ronnnnn](https://github.com/ronnnnn)
+
+## 5.6.0
+
+**Bug fix**
+- [#530](https://github.com/FlutterGen/flutter_gen/pull/530) Fix the Flavored assets. by [@AlexV525](https://github.com/AlexV525)
+- [#532](https://github.com/FlutterGen/flutter_gen/pull/532) Provide the theme to SvgAssetLoader instead of SvgPicture. by [@Kirpal](https://github.com/Kirpal)
+
+## 5.5.0+1
+
+**Feature**
+- [#471](https://github.com/FlutterGen/flutter_gen/pull/471) Handles root directory assets. by [@AlexV525](https://github.com/AlexV525)
+- [#472](https://github.com/FlutterGen/flutter_gen/pull/472) Add directory_path_enabled to output the path of assets directory classes. by [@AlexV525](https://github.com/AlexV525)
+- [#487](https://github.com/FlutterGen/flutter_gen/pull/487) Add support for 'useArtboardSize' argument in rive integration. by [@devilbuddy](https://github.com/devilbuddy)
+- [#493](https://github.com/FlutterGen/flutter_gen/pull/493) Add support for vector graphics (vec files) in SvgGenImage. by [@raldhafiri](https://github.com/raldhafiri)
+
+**Bug fix**
+- [#485](https://github.com/FlutterGen/flutter_gen/pull/485) Remove default SvgTheme argument preventing DefaultSvgTheme works correctly. by [@mym0404](https://github.com/mym0404)
+
+**Development**
+- Update to Dart 3.3.4.
+- Update to Flutter 3.19.6.
+
+## 5.4.0
+
+**Feature**
+- [#435](https://github.com/FlutterGen/flutter_gen/pull/435) Allowed the generated values statement to optionally be static. [@bramp](https://github.com/bramp)
+
+**Bug fix**  
+- [#432](https://github.com/FlutterGen/flutter_gen/pull/432) Refactored the AssetGenImage code to be another Integration. [@bramp](https://github.com/bramp)
+
+**Development**
+- [#438](https://github.com/FlutterGen/flutter_gen/pull/438) Fix module configurations.
+- Update to Dart 3.2.0.
+- Update to Flutter 3.16.0.
+
+## 5.3.2
+
+**Bug fix**  
+- [#409](https://github.com/FlutterGen/flutter_gen/pull/409) Update dependencies.
+  - Update Dart SDK to `>=2.17.0 <4.0.0`.
+
+**Development**
+- Update to Dart 3.1.2.
+- Update to Flutter 3.13.5.
+
+**Team**
+- Welcome [@AlexV525](https://github.com/AlexV525) 🎉
+
 ## 5.3.1
 
 **Bug fix**  
@@ -16,7 +82,6 @@
 - Update Dart SDK to `>=2.17.0 <3.0.0`.
 
 ## 5.2.0
-
 
 **Feature**
 - [#350](https://github.com/FlutterGen/flutter_gen/pull/350) [**BREAKING CHANGES**] Upgrade for support of `flutter_svg 2.0.0`.

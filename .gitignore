@@ -12,19 +12,8 @@
 .svn/
 
 # IntelliJ related
-*.iml
 *.ipr
 *.iws
-
-.idea/.gitignore
-.idea/dictionaries/
-.idea/libraries/
-.idea/misc.xml
-.idea/modules.xml
-.idea/vcs.xml
-.idea/workspace.xml
-.idea/saveactions_settings.xml
-android/.idea/
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -33,8 +22,8 @@ android/.idea/
 
 # Flutter/Dart/Pub related
 # Libraries should not include pubspec.lock, per https://dart.dev/guides/libraries/private-files#pubspeclock.
-pubspec.lock
-pubspec_overrides.yaml
+**/pubspec.lock
+**/pubspec_overrides.yaml
 **/doc/api/
 .dart_tool/
 .flutter-plugins
@@ -45,7 +34,6 @@ pubspec_overrides.yaml
 **/build/
 generated_plugin_registrant.dart
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
-!/pubspec.lock
 
 # Fastlane related
 android/fastlane/report.xml
@@ -124,6 +112,3 @@ coverage.lcov
 
 ## Test resources
 **/test_resources/lib
-
-## Melos
-.idea/runConfigurations/melos_*

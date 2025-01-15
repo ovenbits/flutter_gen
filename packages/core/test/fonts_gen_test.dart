@@ -1,4 +1,3 @@
-@TestOn('vm')
 import 'dart:io';
 
 import 'package:dart_style/dart_style.dart';
@@ -24,11 +23,13 @@ void main() {
         File('test_resources/pubspec_fonts_no_family.yaml'),
       );
       final formatter = DartFormatter(
-          pageWidth: config.pubspec.flutterGen.lineLength, lineEnding: '\n');
+        languageVersion: currentDartVersion,
+        pageWidth: config.pubspec.flutterGen.lineLength,
+        lineEnding: '\n',
+      );
 
       expect(() {
-        return generateFonts(formatter, config.pubspec.flutter.fonts,
-            FontsGenConfig.fromConfig(config));
+        return generateFonts(FontsGenConfig.fromConfig(config), formatter);
       }, throwsA(isA<InvalidSettingsException>()));
     });
 
@@ -38,6 +39,16 @@ void main() {
           'test_resources/actual_data/fonts_change_class_name.gen.dart';
       const generated =
           'test_resources/lib/gen/fonts_change_class_name.gen.dart';
+
+      await expectedFontsGen(pubspec, generated, fact);
+    });
+
+    test('Package parameter enabled', () async {
+      const pubspec = 'test_resources/pubspec_fonts_package_parameter.yaml';
+      const fact =
+          'test_resources/actual_data/fonts_package_parameter.gen.dart';
+      const generated =
+          'test_resources/lib/gen/fonts_package_parameter.gen.dart';
 
       await expectedFontsGen(pubspec, generated, fact);
     });

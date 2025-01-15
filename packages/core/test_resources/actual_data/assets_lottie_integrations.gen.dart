@@ -8,17 +8,26 @@
 // ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
 
 import 'package:flutter/widgets.dart';
-import 'package:lottie/lottie.dart';
+import 'package:lottie/lottie.dart' as _lottie;
 
 class $AssetsLottieGen {
   const $AssetsLottieGen();
+
+  /// File path: assets/lottie/XuiIZ9X1Rf.lottie
+  LottieGenImage get xuiIZ9X1Rf =>
+      const LottieGenImage('assets/lottie/XuiIZ9X1Rf.lottie');
 
   /// File path: assets/lottie/hamburger_arrow.json
   LottieGenImage get hamburgerArrow =>
       const LottieGenImage('assets/lottie/hamburger_arrow.json');
 
+  /// File path: assets/lottie/spinning_carrousel.zip
+  LottieGenImage get spinningCarrousel =>
+      const LottieGenImage('assets/lottie/spinning_carrousel.zip');
+
   /// List of all assets
-  List<LottieGenImage> get values => [hamburgerArrow];
+  List<LottieGenImage> get values =>
+      [xuiIZ9X1Rf, hamburgerArrow, spinningCarrousel];
 }
 
 class Assets {
@@ -28,23 +37,31 @@ class Assets {
 }
 
 class LottieGenImage {
-  const LottieGenImage(this._assetName);
+  const LottieGenImage(
+    this._assetName, {
+    this.flavors = const {},
+  });
 
   final String _assetName;
+  final Set<String> flavors;
 
-  LottieBuilder lottie({
+  _lottie.LottieBuilder lottie({
     Animation<double>? controller,
     bool? animate,
-    FrameRate? frameRate,
+    _lottie.FrameRate? frameRate,
     bool? repeat,
     bool? reverse,
-    LottieDelegates? delegates,
-    LottieOptions? options,
-    void Function(LottieComposition)? onLoaded,
-    LottieImageProviderFactory? imageProviderFactory,
+    _lottie.LottieDelegates? delegates,
+    _lottie.LottieOptions? options,
+    void Function(_lottie.LottieComposition)? onLoaded,
+    _lottie.LottieImageProviderFactory? imageProviderFactory,
     Key? key,
     AssetBundle? bundle,
-    Widget Function(BuildContext, Widget, LottieComposition?)? frameBuilder,
+    Widget Function(
+      BuildContext,
+      Widget,
+      _lottie.LottieComposition?,
+    )? frameBuilder,
     ImageErrorWidgetBuilder? errorBuilder,
     double? width,
     double? height,
@@ -55,7 +72,7 @@ class LottieGenImage {
     FilterQuality? filterQuality,
     void Function(String)? onWarning,
   }) {
-    return Lottie.asset(
+    return _lottie.Lottie.asset(
       _assetName,
       controller: controller,
       animate: animate,

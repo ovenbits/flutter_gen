@@ -8,10 +8,8 @@
 // ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
-import 'package:flare_flutter/flare_actor.dart';
-import 'package:flare_flutter/flare_controller.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rive/rive.dart';
 import 'package:lottie/lottie.dart';
 
@@ -19,10 +17,10 @@ class $AssetsFlareGen {
   const $AssetsFlareGen();
 
   /// File path: assets/flare/Penguin.flr
-  FlareGenImage get penguin => const FlareGenImage('assets/flare/Penguin.flr');
+  String get penguin => 'assets/flare/Penguin.flr';
 
   /// List of all assets
-  List<FlareGenImage> get values => [penguin];
+  List<String> get values => [penguin];
 }
 
 class $AssetsImagesGen {
@@ -193,9 +191,11 @@ class MyAssets {
 }
 
 class AssetGenImage {
-  const AssetGenImage(this._assetName);
+  const AssetGenImage(this._assetName, {this.size = null});
 
   final String _assetName;
+
+  final Size? size;
 
   Image image({
     Key? key,
@@ -215,10 +215,10 @@ class AssetGenImage {
     ImageRepeat repeat = ImageRepeat.noRepeat,
     Rect? centerSlice,
     bool matchTextDirection = false,
-    bool gaplessPlayback = false,
+    bool gaplessPlayback = true,
     bool isAntiAlias = false,
     String? package,
-    FilterQuality filterQuality = FilterQuality.low,
+    FilterQuality filterQuality = FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
   }) {
@@ -284,7 +284,7 @@ class SvgGenImage {
     WidgetBuilder? placeholderBuilder,
     String? semanticsLabel,
     bool excludeFromSemantics = false,
-    SvgTheme theme = const SvgTheme(),
+    SvgTheme? theme,
     ColorFilter? colorFilter,
     @deprecated Color? color,
     @deprecated BlendMode colorBlendMode = BlendMode.srcIn,
@@ -311,49 +311,6 @@ class SvgGenImage {
       colorBlendMode: colorBlendMode,
       clipBehavior: clipBehavior,
       cacheColorFilter: cacheColorFilter,
-    );
-  }
-
-  String get path => _assetName;
-
-  String get keyName => _assetName;
-}
-
-class FlareGenImage {
-  const FlareGenImage(this._assetName);
-
-  final String _assetName;
-
-  FlareActor flare({
-    String? boundsNode,
-    String? animation,
-    BoxFit fit = BoxFit.contain,
-    Alignment alignment = Alignment.center,
-    bool isPaused = false,
-    bool snapToEnd = false,
-    FlareController? controller,
-    FlareCompletedCallback? callback,
-    Color? color,
-    bool shouldClip = true,
-    bool sizeFromArtboard = false,
-    String? artboard,
-    bool antialias = true,
-  }) {
-    return FlareActor(
-      _assetName,
-      boundsNode: boundsNode,
-      animation: animation,
-      fit: fit,
-      alignment: alignment,
-      isPaused: isPaused,
-      snapToEnd: snapToEnd,
-      controller: controller,
-      callback: callback,
-      color: color,
-      shouldClip: shouldClip,
-      sizeFromArtboard: sizeFromArtboard,
-      artboard: artboard,
-      antialias: antialias,
     );
   }
 

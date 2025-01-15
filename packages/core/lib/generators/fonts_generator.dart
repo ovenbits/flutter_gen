@@ -10,47 +10,58 @@ import 'package:flutter_gen_core/utils/string.dart';
 
 class FontsGenConfig {
   FontsGenConfig._(
-    this.fontsConfig,
     this._packageName,
+    this.flutterGen,
+    this.fonts,
   );
 
   factory FontsGenConfig.fromConfig(Config config) {
     return FontsGenConfig._(
-      config.pubspec.flutterGen.fonts,
       config.pubspec.packageName,
+      config.pubspec.flutterGen,
+      config.pubspec.flutter.fonts,
     );
   }
 
-  FlutterGenFonts fontsConfig;
   final String _packageName;
+  final FlutterGen flutterGen;
+  final List<FlutterFonts> fonts;
+
+  String get packageParameterLiteral =>
+      flutterGen.fonts.outputs.packageParameterEnabled == true
+          ? _packageName
+          : '';
 }
 
 String generateFonts(
-  DartFormatter formatter,
-  List<FlutterFonts> fonts,
   FontsGenConfig config,
+  DartFormatter formatter,
 ) {
+  final fonts = config.fonts;
+  final fontsConfig = config.flutterGen.fonts;
   if (fonts.isEmpty) {
     throw InvalidSettingsException(
         'The value of "flutter/fonts:" is incorrect.');
   }
 
   final buffer = StringBuffer();
-  final className = config.fontsConfig.outputs.className;
+  final className = fontsConfig.outputs.className;
   buffer.writeln(header);
   buffer.writeln(ignore);
   buffer.writeln('class $className {');
   buffer.writeln('$className._();');
   buffer.writeln();
 
-  String packagePath = '';
-  if (config.fontsConfig.outputs.packageParameterEnabled == true) {
-    packagePath = 'packages/${config._packageName}/';
+  final isPackage = config.packageParameterLiteral.isNotEmpty;
+  if (isPackage) {
+    buffer.writeln("static const String package = '${config._packageName}';");
+    buffer.writeln();
   }
 
   fonts.map((element) => element.family).distinct().sorted().forEach((family) {
+    final keyName = isPackage ? 'packages/\$package/$family' : family;
     buffer.writeln("""/// Font family: $family
-    static const String ${family.camelCase()} = '$packagePath$family';""");
+    static const String ${family.camelCase()} = '$keyName';""");
   });
 
   buffer.writeln('}');

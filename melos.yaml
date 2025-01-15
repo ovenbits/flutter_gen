@@ -6,29 +6,30 @@ packages:
   - examples/**
 
 ide:
-  intellij: true
-  vscode: true
+  intellij:
+    enabled: true
+    moduleNamePrefix: ''
 
 command:
   clean:
     hooks:
       post:
-        run: |
-          melos exec -c 6 -- flutter clean
+        run: flutter clean
+        exec:
+          concurrency: 1
         description: flutter clean
 
 scripts:
-  get:
-    run: |
-      melos exec -c 6 -- flutter pub get
-    description: flutter pub get
-
   upgrade:
-    run: melos exec -c 6 -- flutter pub upgrade
-    description: flutter pub upgrade
+    run: dart pub upgrade
+    exec:
+      concurrency: 1
+    packageFilters:
+      flutter: false
+    description: dart pub upgrade
 
   analyze:
-    run: melos exec -c 6 -- flutter analyze
+    exec: flutter analyze
     description: flutter analyze
 
   format:
@@ -42,42 +43,57 @@ scripts:
     description: flutter build apk
 
   gen:build_runner:
-    exec: dart pub run build_runner build --delete-conflicting-outputs
+    exec: dart run build_runner build --delete-conflicting-outputs
     packageFilters:
       ignore:
         - example
         - example_resources
       dependsOn: build_runner
-    description: dart pub run build_runner build --delete-conflicting-outputs
+    description: dart run build_runner build --delete-conflicting-outputs
 
   gen:examples:command:
-    exec: dart ../../packages/command/bin/flutter_gen_command.dart --config pubspec.yaml
+    exec: dart ../../packages/command/bin/flutter_gen_command.dart
     packageFilters:
-      scope: 
+      scope:
         - example
         - example_resources
-    description: dart ../../packages/command/bin/flutter_gen_command.dart --config pubspec.yaml
+    description: dart ../../packages/command/bin/flutter_gen_command.dart
 
   gen:examples:build_runner:
-    exec: flutter pub run build_runner build --delete-conflicting-outputs
+    run: flutter pub run build_runner build --delete-conflicting-outputs
+    exec:
+      concurrency: 1
     packageFilters:
-      scope: 
+      scope:
         - example
         - example_resources
     description: flutter pub run build_runner build --delete-conflicting-outputs
 
   test:
-    run: melos test:dart --no-select
-    description: dart test
+    run: |
+      melos test:dart --no-select
+      melos test:flutter --no-select
+    description: dart & flutter test
 
   test:dart:
-    run: dart test
+    run: dart test --concurrency=1
     exec:
+      concurrency: 1
       failFast: true
     packageFilters:
       flutter: false
       dependsOn: test
     description: dart test
+
+  test:flutter:
+    run: flutter test --concurrency=1
+    exec:
+      concurrency: 1
+      failFast: true
+    packageFilters:
+      flutter: true
+      dependsOn: flutter_test
+    description: flutter test
 
   coverage:
     run: |

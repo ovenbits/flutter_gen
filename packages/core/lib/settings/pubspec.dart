@@ -4,7 +4,7 @@ part 'pubspec.g.dart';
 
 // NOTE: Run `melos gen:build_runner` after editing this file
 
-@JsonSerializable()
+@JsonSerializable(disallowUnrecognizedKeys: false)
 class Pubspec {
   Pubspec({
     required this.packageName,
@@ -24,7 +24,7 @@ class Pubspec {
   final Flutter flutter;
 }
 
-@JsonSerializable()
+@JsonSerializable(disallowUnrecognizedKeys: false)
 class Flutter {
   Flutter({
     required this.assets,
@@ -32,7 +32,7 @@ class Flutter {
   });
 
   @JsonKey(name: 'assets', required: true)
-  final List<String> assets;
+  final List<Object> assets;
 
   @JsonKey(name: 'fonts', required: true)
   final List<FlutterFonts> fonts;
@@ -40,7 +40,7 @@ class Flutter {
   factory Flutter.fromJson(Map json) => _$FlutterFromJson(json);
 }
 
-@JsonSerializable()
+@JsonSerializable(disallowUnrecognizedKeys: false)
 class FlutterFonts {
   FlutterFonts({required this.family});
 
@@ -55,6 +55,7 @@ class FlutterGen {
   FlutterGen({
     required this.output,
     required this.lineLength,
+    required this.parseMetadata,
     required this.assets,
     required this.fonts,
     required this.integrations,
@@ -66,6 +67,9 @@ class FlutterGen {
 
   @JsonKey(name: 'line_length', required: true)
   final int lineLength;
+
+  @JsonKey(name: 'parse_metadata', required: true)
+  final bool parseMetadata;
 
   @JsonKey(name: 'assets', required: true)
   final FlutterGenAssets assets;
@@ -155,7 +159,6 @@ class FlutterGenIntegrations {
   FlutterGenIntegrations({
     required this.flutterImage,
     required this.flutterSvg,
-    required this.flareFlutter,
     required this.rive,
     required this.lottie,
   });
@@ -165,9 +168,6 @@ class FlutterGenIntegrations {
 
   @JsonKey(name: 'flutter_svg', required: true)
   final bool flutterSvg;
-
-  @JsonKey(name: 'flare_flutter', required: true)
-  final bool flareFlutter;
 
   @JsonKey(name: 'rive', required: true)
   final bool rive;
@@ -193,20 +193,6 @@ class FlutterGenElementOutputs {
 }
 
 @JsonSerializable()
-class FlutterGenElementFontsOutputs extends FlutterGenElementOutputs {
-  FlutterGenElementFontsOutputs({
-    required super.className,
-    required this.packageParameterEnabled,
-  });
-
-  @JsonKey(name: 'package_parameter_enabled', required: false)
-  final bool? packageParameterEnabled;
-
-  factory FlutterGenElementFontsOutputs.fromJson(Map json) =>
-      _$FlutterGenElementFontsOutputsFromJson(json);
-}
-
-@JsonSerializable()
 class FlutterGenElementAssetsOutputs extends FlutterGenElementOutputs {
   static const String dotDelimiterStyle = 'dot-delimiter';
   static const String snakeCaseStyle = 'snake-case';
@@ -215,6 +201,7 @@ class FlutterGenElementAssetsOutputs extends FlutterGenElementOutputs {
   FlutterGenElementAssetsOutputs({
     required String className,
     required this.packageParameterEnabled,
+    required this.directoryPathEnabled,
     required this.style,
   }) : super(className: className) {
     if (style != dotDelimiterStyle &&
@@ -224,8 +211,11 @@ class FlutterGenElementAssetsOutputs extends FlutterGenElementOutputs {
     }
   }
 
-  @JsonKey(name: 'package_parameter_enabled', required: true)
+  @JsonKey(name: 'package_parameter_enabled', defaultValue: false)
   final bool packageParameterEnabled;
+
+  @JsonKey(name: 'directory_path_enabled', defaultValue: false)
+  final bool directoryPathEnabled;
 
   @JsonKey(name: 'style', required: true)
   final String style;
@@ -238,4 +228,18 @@ class FlutterGenElementAssetsOutputs extends FlutterGenElementOutputs {
 
   factory FlutterGenElementAssetsOutputs.fromJson(Map json) =>
       _$FlutterGenElementAssetsOutputsFromJson(json);
+}
+
+@JsonSerializable()
+class FlutterGenElementFontsOutputs extends FlutterGenElementOutputs {
+  FlutterGenElementFontsOutputs({
+    required super.className,
+    required this.packageParameterEnabled,
+  });
+
+  @JsonKey(name: 'package_parameter_enabled', defaultValue: false)
+  final bool packageParameterEnabled;
+
+  factory FlutterGenElementFontsOutputs.fromJson(Map json) =>
+      _$FlutterGenElementFontsOutputsFromJson(json);
 }

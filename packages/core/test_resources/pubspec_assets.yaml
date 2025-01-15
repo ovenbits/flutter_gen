@@ -6,7 +6,6 @@ flutter_gen:
 
   integrations:
     flutter_svg: true
-    flare_flutter: true
 
 flutter:
   assets:
@@ -23,3 +22,4 @@ flutter:
     - assets/flare/
     - assets/movie/
     - assets/unknown/unknown_mime_type.bk
+    - CHANGELOG.md
