@@ -21,7 +21,8 @@ class $AssetsImagesGen {
   SvgGenImage get dart => const SvgGenImage('assets/images/dart.svg');
 
   /// File path: assets/images/favorite.flr
-  String get favorite => 'assets/images/favorite.flr';
+  String get favorite =>
+      'packages/example_resources/assets/images/favorite.flr';
 
   /// File path: assets/images/flutter3.jpg
   AssetGenImage get flutter3 =>
@@ -35,8 +36,13 @@ class $AssetsImagesGen {
   RiveGenImage get skills => const RiveGenImage('assets/images/skills.riv');
 
   /// List of all assets
-  List<dynamic> get values =>
-      [dart, favorite, flutter3, runningCarOnRoad, skills];
+  List<dynamic> get values => [
+    dart,
+    favorite,
+    flutter3,
+    runningCarOnRoad,
+    skills,
+  ];
 }
 
 class $AssetsUnknownGen {
@@ -60,11 +66,7 @@ class ResAssets {
 }
 
 class AssetGenImage {
-  const AssetGenImage(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  });
+  const AssetGenImage(this._assetName, {this.size, this.flavors = const {}});
 
   final String _assetName;
 
@@ -132,11 +134,7 @@ class AssetGenImage {
     @Deprecated('Do not specify package for a generated library asset')
     String? package = package,
   }) {
-    return AssetImage(
-      _assetName,
-      bundle: bundle,
-      package: package,
-    );
+    return AssetImage(_assetName, bundle: bundle, package: package);
   }
 
   String get path => _assetName;
@@ -145,17 +143,11 @@ class AssetGenImage {
 }
 
 class SvgGenImage {
-  const SvgGenImage(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  }) : _isVecFormat = false;
+  const SvgGenImage(this._assetName, {this.size, this.flavors = const {}})
+    : _isVecFormat = false;
 
-  const SvgGenImage.vec(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  }) : _isVecFormat = true;
+  const SvgGenImage.vec(this._assetName, {this.size, this.flavors = const {}})
+    : _isVecFormat = true;
 
   final String _assetName;
   final Size? size;
@@ -212,7 +204,8 @@ class SvgGenImage {
       placeholderBuilder: placeholderBuilder,
       semanticsLabel: semanticsLabel,
       excludeFromSemantics: excludeFromSemantics,
-      colorFilter: colorFilter ??
+      colorFilter:
+          colorFilter ??
           (color == null ? null : ColorFilter.mode(color, colorBlendMode)),
       clipBehavior: clipBehavior,
       cacheColorFilter: cacheColorFilter,
@@ -225,10 +218,7 @@ class SvgGenImage {
 }
 
 class RiveGenImage {
-  const RiveGenImage(
-    this._assetName, {
-    this.flavors = const {},
-  });
+  const RiveGenImage(this._assetName, {this.flavors = const {}});
 
   final String _assetName;
   final Set<String> flavors;
@@ -268,10 +258,7 @@ class RiveGenImage {
 }
 
 class LottieGenImage {
-  const LottieGenImage(
-    this._assetName, {
-    this.flavors = const {},
-  });
+  const LottieGenImage(this._assetName, {this.flavors = const {}});
 
   final String _assetName;
   final Set<String> flavors;
@@ -290,11 +277,8 @@ class LottieGenImage {
     _lottie.LottieImageProviderFactory? imageProviderFactory,
     Key? key,
     AssetBundle? bundle,
-    Widget Function(
-      BuildContext,
-      Widget,
-      _lottie.LottieComposition?,
-    )? frameBuilder,
+    Widget Function(BuildContext, Widget, _lottie.LottieComposition?)?
+    frameBuilder,
     ImageErrorWidgetBuilder? errorBuilder,
     double? width,
     double? height,

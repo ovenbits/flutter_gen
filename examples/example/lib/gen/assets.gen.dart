@@ -54,8 +54,13 @@ class $AssetsImagesGen {
       const AssetGenImage('assets/images/profile.png');
 
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [chip1, chip2, logo, profileJpg, profilePng];
+  List<AssetGenImage> get values => [
+    chip1,
+    chip2,
+    logo,
+    profileJpg,
+    profilePng,
+  ];
 }
 
 class $AssetsJsonGen {
@@ -171,10 +176,8 @@ class $AssetsImagesChip4Gen {
   const $AssetsImagesChip4Gen();
 
   /// File path: assets/images/chip4/chip4.jpg
-  AssetGenImage get chip4 => const AssetGenImage(
-        'assets/images/chip4/chip4.jpg',
-        flavors: {'extern'},
-      );
+  AssetGenImage get chip4 =>
+      const AssetGenImage('assets/images/chip4/chip4.jpg', flavors: {'extern'});
 
   /// List of all assets
   List<AssetGenImage> get values => [chip4];
@@ -232,11 +235,7 @@ class MyAssets {
 }
 
 class AssetGenImage {
-  const AssetGenImage(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  });
+  const AssetGenImage(this._assetName, {this.size, this.flavors = const {}});
 
   final String _assetName;
 
@@ -263,6 +262,7 @@ class AssetGenImage {
     bool matchTextDirection = false,
     bool gaplessPlayback = true,
     bool isAntiAlias = false,
+
     String? package,
     FilterQuality filterQuality = FilterQuality.medium,
     int? cacheWidth,
@@ -296,15 +296,8 @@ class AssetGenImage {
     );
   }
 
-  ImageProvider provider({
-    AssetBundle? bundle,
-    String? package,
-  }) {
-    return AssetImage(
-      _assetName,
-      bundle: bundle,
-      package: package,
-    );
+  ImageProvider provider({AssetBundle? bundle, String? package}) {
+    return AssetImage(_assetName, bundle: bundle, package: package);
   }
 
   String get path => _assetName;
@@ -313,17 +306,11 @@ class AssetGenImage {
 }
 
 class SvgGenImage {
-  const SvgGenImage(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  }) : _isVecFormat = false;
+  const SvgGenImage(this._assetName, {this.size, this.flavors = const {}})
+    : _isVecFormat = false;
 
-  const SvgGenImage.vec(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  }) : _isVecFormat = true;
+  const SvgGenImage.vec(this._assetName, {this.size, this.flavors = const {}})
+    : _isVecFormat = true;
 
   final String _assetName;
   final Size? size;
@@ -334,6 +321,7 @@ class SvgGenImage {
     Key? key,
     bool matchTextDirection = false,
     AssetBundle? bundle,
+
     String? package,
     double? width,
     double? height,
@@ -377,7 +365,8 @@ class SvgGenImage {
       placeholderBuilder: placeholderBuilder,
       semanticsLabel: semanticsLabel,
       excludeFromSemantics: excludeFromSemantics,
-      colorFilter: colorFilter ??
+      colorFilter:
+          colorFilter ??
           (color == null ? null : ColorFilter.mode(color, colorBlendMode)),
       clipBehavior: clipBehavior,
       cacheColorFilter: cacheColorFilter,
@@ -390,10 +379,7 @@ class SvgGenImage {
 }
 
 class RiveGenImage {
-  const RiveGenImage(
-    this._assetName, {
-    this.flavors = const {},
-  });
+  const RiveGenImage(this._assetName, {this.flavors = const {}});
 
   final String _assetName;
   final Set<String> flavors;
@@ -431,10 +417,7 @@ class RiveGenImage {
 }
 
 class LottieGenImage {
-  const LottieGenImage(
-    this._assetName, {
-    this.flavors = const {},
-  });
+  const LottieGenImage(this._assetName, {this.flavors = const {}});
 
   final String _assetName;
   final Set<String> flavors;
@@ -451,16 +434,14 @@ class LottieGenImage {
     _lottie.LottieImageProviderFactory? imageProviderFactory,
     Key? key,
     AssetBundle? bundle,
-    Widget Function(
-      BuildContext,
-      Widget,
-      _lottie.LottieComposition?,
-    )? frameBuilder,
+    Widget Function(BuildContext, Widget, _lottie.LottieComposition?)?
+    frameBuilder,
     ImageErrorWidgetBuilder? errorBuilder,
     double? width,
     double? height,
     BoxFit? fit,
     AlignmentGeometry? alignment,
+
     String? package,
     bool? addRepaintBoundary,
     FilterQuality? filterQuality,
