@@ -66,13 +66,13 @@ Config loadPubspecConfig(File pubspecFile, {File? buildFile}) {
           '[FlutterGen] Reading options from $buildLocaleHint',
         );
       } else {
-        stderr.writeln(
+        stdout.writeln(
           '[FlutterGen] Specified ${buildFile.path} as input but the file '
           'does not contain valid options, ignoring...',
         );
       }
     } else {
-      stderr.writeln(
+      stdout.writeln(
         '[FlutterGen] Specified ${buildFile.path} as input but the file '
         'does not exists.',
       );
